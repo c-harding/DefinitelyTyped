@@ -63,6 +63,12 @@ export interface RecycleScrollerInstance {
     getScroll(): { start: number; end: number };
     scrollToItem(index: number): void;
     scrollToPosition(position: number): void;
+
+    sizes: Record<number, { accumulator: number; size: number }>;
+
+    readonly $refs: {
+        wrapper: HTMLElement;
+    };
 }
 
 /**
@@ -83,6 +89,26 @@ export function RecycleScroller<T>(
     };
 };
 
+export interface DynamicScrollerInstance {
+    getScroll(): { start: number; end: number };
+    scrollToItem(index: number): void;
+    scrollToBottom(): void;
+
+    readonly vscrollData: {
+        active: boolean;
+        sizes: Record<string, number>;
+        validSizes: object;
+        keyField: string;
+        simpleArray: boolean;
+    };
+
+    readonly $el: HTMLElement;
+
+    readonly $refs: {
+        scroller: RecycleScrollerInstance;
+    };
+}
+
 /**
  * DynamicScroller is a component that wraps the RecycleScroller component
  * and extends its features to include dynamic size management.
@@ -94,11 +120,11 @@ export function RecycleScroller<T>(
 export function DynamicScroller<T>(
     props: DynamicScrollerProps<T> & PublicProps,
     ctx?: SetupContext<RecycleScrollerEmitOptions, SlotsType<RecycleScrollerSlots<T>>>,
-    expose?: (exposed: RecycleScrollerInstance) => void,
+    expose?: (exposed: DynamicScrollerInstance) => void,
 ): VNode & {
     __ctx?: {
         props: DynamicScrollerProps<T> & PublicProps;
-        expose(exposed: RecycleScrollerInstance): void;
+        expose(exposed: DynamicScrollerInstance): void;
         slots: RecycleScrollerSlots<T>;
     };
 };
